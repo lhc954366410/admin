@@ -5,13 +5,12 @@ router.get('/', (ctx, next) => {
   ctx.body = 'Hello koa-router---> koa2';
 });
 router.post('/login', (ctx, next) => {
-  log('ctx.request.body', ctx.req);
+  const {username,password} = <any>ctx.request.body
   ctx.body = {
     code: 200,
     data: {
-      name: 'zhangsan',
-      age: 18,
-      sex: '男'
+      username,
+      password
     }
   }
 });

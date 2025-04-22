@@ -1,5 +1,5 @@
 ## 从0开始搭建koa项目,结合typescript
-### 基础项目搭建
+### 企业站基础项目搭建
 1. 初始化项目
 ```bash
 yarn init 
@@ -57,6 +57,7 @@ yarn add nodemon -D
     "outDir": "./dist"
   }
 }
+```
  编译后的文件在dist目录下，发布时将dist目录下的文件复制到服务器上即可
 ```bash
 yarn build
@@ -78,12 +79,12 @@ yarn start
   "build": "rimraf dist  && tsc",
   "start": "node dist/index.js"
 }
+```
 打包之前先删除原来的文件，rimraf是一个跨平台的删除文件和文件夹的命令，使用前需要安装
 ```bash
 yarn add rimraf -D
-···
-
 ```
+
 
 到这里已经可以将项目运行发发布了。
 8. 安装koa-router
@@ -179,9 +180,9 @@ yarn add tsc-alias -D
 这时候就可以正常打包了。下面将此作为基础，做一个企业站，慢慢去完善安装依赖
 
 
-### 企业站搭建
 
-1. 路由中增加login接口
+
+10. 路由中增加login接口
 ```ts
 router.post('/login', (ctx, next) => {
   ctx.body = {
@@ -193,12 +194,12 @@ router.post('/login', (ctx, next) => {
     }
   }
 });
-···
-2. 使用umi创建前端项目，并请求login接口，发下报错了，跨域
+```
+11. 使用umi创建前端项目，并请求login接口，发下报错了，跨域
 ```
 Access to XMLHttpRequest at 'http://localhost:3000/login' from origin 'http://localhost:3001' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
 ```
-3. 处理跨域问题
+12. 处理跨域问题
 ```bash
 yarn add koa2-cors
 yarn add  @types/koa2-cors -D
@@ -212,4 +213,31 @@ app.use(cors({
 ```
 重新请求login接口，发现可以正常请求了。
 
-测试提交
+13. 登录接口获取用户提交的账号和密码
+安装koa-bodyparser
+```bash
+yarn add koa-bodyparser
+yarn add @types/koa-bodyparser -D
+```
+src/index.ts增加
+```ts
+import bodyParser from 'koa-bodyparser'
+app.use(bodyParser())
+```
+src/routes/index.ts增加
+```ts
+router.post('/login', async (ctx, next) => {
+  //懒得定义类型了，直接any了
+  const {username,password} = <any>ctx.request.body
+  ctx.body = {
+    code: 200,
+    data: {
+      username,
+      password
+    }
+  }
+});
+```
+
+14. 连接数据库，创建用户表
+

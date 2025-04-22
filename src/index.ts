@@ -1,11 +1,14 @@
 import Koa from 'koa';
 import cors from 'koa2-cors';
+import bodyParser from 'koa-bodyparser'
 
 const app = new Koa();
 import router from '@/routes/index';
 app.use(cors({
     origin: '*'
 }))
+app.use(bodyParser())
+
 // 响应
 app.use(router.routes())
 
