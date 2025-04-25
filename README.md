@@ -240,5 +240,13 @@ router.post('/login', async (ctx, next) => {
 ```
 
 14. 连接数据库，创建用户表
-    
+安装依赖
+```bash
+yarn add mysql2
+yarn add @types/mysql2 -D
+# yarn add typeorm reflect-metadata -D
+```
+src/index.ts增加
+
+
 
