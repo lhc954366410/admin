@@ -246,7 +246,135 @@ yarn add mysql2
 yarn add @types/mysql2 -D
 # yarn add typeorm reflect-metadata -D
 ```
-src/index.ts增加
+src/db.ts增加
+```ts
+// db.js
+const mysql = require('mysql2');
 
+// 创建连接池（推荐生产环境使用）
+const pool = mysql.createPool({
+  host: 'localhost',
+  user: 'root',
+  password: 'yourpassword',
+  database: 'my_database',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
+});
 
+// 导出 Promise 接口
+module.exports = pool.promise();
+```
+我已创建好数据库
+在src/index.ts中增加
+```ts
+import dbPool from './db';
+
+const testDb = async () => {
+    try {
+        // 测试连接
+        const connection = await dbPool.getConnection();
+        console.log('数据库连接成功');
+        connection.release(); // 释放连接
+    } catch (error) {
+        console.error('数据库连接失败:', error);
+    }
+}
+testDb()
+```
+运行程序，数据库连接成功,删除上面的 测试代码、到此为止，项目基本可以运行起来了
+
+15. 重新整理一下项目结构，如下
+```
+├── src/
+│   ├── app.ts                  # 应用入口
+│   ├── config/
+│   │   ├── database.ts         # 数据库配置  返回连接池
+│   │   └── env.ts              # 环境配置
+│   ├── controllers/            # 控制器
+│   ├── services/               # 业务逻辑
+│   ├── repositories/           # 数据访问层
+│   ├── models/                 # 数据模型/接口
+│   ├── middleware/             # 自定义中间件
+│   ├── routes/                 # 路由定义
+│   ├── utils/                  # 工具函数
+│   └── types/                  # 类型定义
+├── .gitignore                  # git 忽略文件
+├── yarn.lock                   # yarn 依赖锁文件
+├── README.md                   # 项目说明
+├── package.json                # 项目依赖和脚本
+└── tsconfig.json               # TypeScript 配置文件
+
+```
+config/env.ts
+```ts
+interface Config {
+  db: {
+    host: string;
+    port: number;
+    user: string;
+    password: string;
+    database: string;
+    charset: string;
+    connectionLimit: number;
+  };
+  app: {
+    port: number;
+  };
+}
+
+export const config: Config = {
+  db: {
+    host: 'localhost',
+    port: 3306,
+    user:  'root',
+    password: '123456',
+    database: 'web_database',
+    charset: 'utf8mb4',
+    connectionLimit: 10
+  },
+  app: {
+    port: 3000
+  }
+};
+```
+
+config/database.ts 返回连接池
+```ts
+import mysql from 'mysql2/promise';
+import { config } from './env';
+
+class Database {
+  private static pool: mysql.Pool;
+
+  static async initialize() {
+    this.pool = mysql.createPool(config.db);
+    try {
+      // 测试连接
+      const connection = await this.pool.getConnection();
+      console.log('数据库连接成功');
+      connection.release(); // 释放连接
+    } catch (error) {
+      console.error('数据库连接失败:', error);
+    }
+  }
+
+  static getPool(): mysql.Pool {
+    if (!this.pool) {
+      throw new Error('Database not initialized');
+    }
+    return this.pool;
+  }
+
+  static async close(): Promise<void> {
+    if (this.pool) {
+      await this.pool.end();
+    }
+  }
+}
+Database.initialize();
+
+export default Database.getPool();
+```
+修改src/index.ts
 
