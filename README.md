@@ -87,17 +87,17 @@ yarn add rimraf -D
 
 
 到这里已经可以将项目运行发发布了。
-8. 安装koa-router
+8. 安装@koa/router
 ```bash
-yarn add koa-router
-yarn add @types/koa-router -D
+yarn add @koa/router
+yarn add @types/koa__router -D
 ```
 新建src/routes/index.ts
 ```ts
-import Router from 'koa-router';
+import Router from '@koa/router';
 const router = new Router();
 router.get('/', (ctx, next) => {
-  ctx.body = 'Hello koa-router'
+  ctx.body = 'Hello @koa/router'
   next()
 })
 export default router
@@ -110,7 +110,7 @@ const app = new Koa()
 app.use(router.routes())
 app.listen(3000)
 ```
-再次访问http://localhost:3000/ 可以看到 Hello koa-router。
+再次访问http://localhost:3000/ 可以看到 Hello @koa/router。
 
 9. 使用路径别名
 在目录深层次引用的时候，使用相对路径会很麻烦，使用路径别名可以简化路径。
