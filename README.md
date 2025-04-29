@@ -292,6 +292,7 @@ testDb()
 │   │   ├── database.ts         # 数据库配置  返回连接池
 │   │   └── env.ts              # 环境配置
 │   ├── controllers/            # 控制器
+│   ├── dto/                    # 数据传输对象
 │   ├── services/               # 业务逻辑
 │   ├── repositories/           # 数据访问层
 │   ├── models/                 # 数据模型/接口
@@ -377,4 +378,42 @@ Database.initialize();
 export default Database.getPool();
 ```
 修改src/index.ts
+```ts
+import Koa from 'koa';
+import cors from 'koa2-cors';
+import bodyParser from 'koa-bodyparser'
+import router from '@/routes/index';
+import { config } from './config/env';
+import { Database } from './config/database';
+(async () => {
 
+    const app = new Koa();
+    // 跨域
+    app.use(cors({
+        origin: '*'
+    }))
+    // 解析请求体
+    app.use(bodyParser())
+    
+    // 响应
+    app.use(router.routes()).use(router.allowedMethods());
+    const PORT = config.app.port;
+    const server = app.listen(3000, async () => {
+        console.log(`http://localhost:${PORT}/`);
+    });
+    process.on('SIGTERM', async () => {
+        await Database.close();
+        server.close(() => {
+        console.log('Server closed');
+        process.exit(0);
+        });
+    });
+
+    
+})()
+
+
+```
+dto 数据传输对象
+class-validator：提供数据验证装饰器。
+class-transformer：将普通对象转换为 DTO 类的实例（plainToInstance）。

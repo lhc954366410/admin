@@ -16,13 +16,13 @@ class AuthController {
     try {
       const userData = ctx.request.body as CreateUserDto;
       const user = await userService.register(userData);
-      
+
       // 移除敏感信息
       const { password_hash, ...response } = user;
-      
+
       ctx.status = 201;
       ctx.body = { user: response };
-    } catch (err:any) {
+    } catch (err: any) {
       ctx.status = 400;
       ctx.body = { error: err.message };
     }
@@ -30,24 +30,25 @@ class AuthController {
 
   async login(ctx: Context) {
     const { email, password } = <any>ctx.request.body;
-    
-    try {
-      const user = await userService.validateCredentials(email, password);
-      
-      if (!user) {
-        ctx.status = 401;
-        ctx.body = { error: 'Invalid credentials' };
-        return;
-      }
-      
-      // 生成token等逻辑...
-      const { password_hash, ...response } = user;
-      
-      ctx.body = { user: response };
-    } catch (err) {
-      ctx.status = 500;
-      ctx.body = { error: 'Login failed' };
+
+    // try {
+    const user = await userService.validateCredentials(email, password);
+
+    if (!user) {
+      ctx.status = 401;
+      ctx.body = { error: 'Invalid credentials' };
+      return;
     }
+
+    // 生成token等逻辑...
+    const { password_hash, ...response } = user;
+
+    ctx.body = { user: response };
+    // } catch (err) {
+    //   console.error(err);
+    //   ctx.status = 500;
+    //   ctx.body = { error: 'Login failed' };
+    // }
   }
 }
 

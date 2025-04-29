@@ -4,6 +4,7 @@ import bodyParser from 'koa-bodyparser'
 import router from '@/routes/index';
 import { config } from './config/env';
 import { Database } from './config/database';
+import errorMiddleware from './middleware/error';
 (async () => {
 
     const app = new Koa();
@@ -11,6 +12,7 @@ import { Database } from './config/database';
     app.use(cors({
         origin: '*'
     }))
+    app.use(errorMiddleware);
     // 解析请求体
     app.use(bodyParser())
     
