@@ -5,8 +5,34 @@ import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { CreateUserDto, LoginUserDto } from '@/dto/user.dto';
 import { validateDto } from '@/utils/validateDto';
+import { TokenService } from '@/services/token.service';
 
 class AuthController {
+  async checkLogin(ctx: Context) {
+    const authHeader = ctx.headers.authorizationtoken;
+    if (!authHeader) {
+      ctx.status = 401;
+      ctx.body = { message: '未提供认证令牌' };
+      return;
+    }
+    try {
+      const res = await TokenService.verifyToken(authHeader as string)
+      ctx.body = {
+        code: 200,
+        message: "登录成功"
+      };
+    } catch (e) {
+      ctx.status = 401;
+      ctx.body = { message: '登录已过期' };
+      return;
+    }
+
+
+  }
+
+
+
+
   async register(ctx: Context) {
     const userData = ctx.request.body as CreateUserDto;
     // const teamDto = plainToInstance(CreateUserDto, userData);
@@ -31,9 +57,6 @@ class AuthController {
       ctx.body = errors;
       return
     }
-
-
-
     const user = await userService.validateCredentials(userData);
     if (!user) {
       ctx.body = {
@@ -42,9 +65,15 @@ class AuthController {
       };
       return;
     }
+    const accessToken = TokenService.generateAccessToken(user.id)
+    const { password, createdAt, updatedAt, lastLogin, ...u } = user
+
     ctx.body = {
       code: 200,
-      data: {},
+      data: {
+        ...u,
+        token: accessToken
+      },
     };
 
   }

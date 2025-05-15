@@ -19,13 +19,12 @@ export class UserRepository extends BaseRepository<UserResponseDto> {
   }
 
   async create(userData: CreateUserDto): Promise<UserResponseDto> {
-    const hashedPassword = await bcrypt.hash(userData.password, config.app.saltRounds);
     const result = await this.query(
       `INSERT INTO ${this.tableName} SET ?`, 
       [{
         userName: userData.userName,
         email: userData.email,
-        password: hashedPassword
+        password: userData.password
       }]
     );
     return this.findById(result.insertId) as Promise<UserResponseDto>;

@@ -1,3 +1,5 @@
+import { StringValue } from "ms";
+
 interface Config {
   db: {
     host: string;
@@ -12,6 +14,12 @@ interface Config {
     port: number;
     saltRounds: number;
   };
+  jwt:{
+    secret:string;
+    expiresIn:StringValue | number;
+    issuer:string;
+    audience:string
+  }
 }
 
 export const config: Config = {
@@ -27,5 +35,11 @@ export const config: Config = {
   app: {
     port: 3000,
     saltRounds: 10
+  },
+  jwt:{
+    secret:'test',
+    expiresIn:'1 H',
+    issuer:'admin',
+    audience:'admin'
   }
 };

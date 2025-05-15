@@ -4,24 +4,41 @@ import userRepository from '@/repositories/user.repository';
 import * as bcrypt from 'bcrypt';
 
 class UserService {
+  /**
+   * 生成密码
+   * @param password 
+   * @returns 
+   */
+  private async hashPassword(password: string): Promise<string> {
+    return bcrypt.hash(password, config.app.saltRounds);
+  }
+  /**
+   * 注册
+   * @param userData 
+   * @returns 
+   */
+
   async register(userData: CreateUserDto): Promise<UserResponseDto> {
     // 检查邮箱是否已存在
     const existingUser = await userRepository.findByEmail(userData.email);
     if (existingUser) {
       throw new Error('邮箱已存在！');
-    }    
+    }
     // 创建用户
+    userData.password = await this.hashPassword(userData.password);
     return userRepository.create(userData);
   }
 
-  async validateCredentials(data:LoginUserDto): Promise<UserResponseDto | null> {
-    const user = await userRepository.findByEmail(data.email);
-    if (!user) return null;    
-    const hashedPassword = await bcrypt.hash(data.password, config.app.saltRounds);
-    console.log(user!.password)
-    console.log(hashedPassword)
+  /**
+   * 校验用户登录
+   * @param data 
+   * @returns 
+   */
 
-    const isValid =  await bcrypt.compare(user.password!,hashedPassword);
+  async validateCredentials(data: LoginUserDto): Promise<UserResponseDto | null> {
+    const user = await userRepository.findByEmail(data.email);
+    if (!user) return null;
+    const isValid = await bcrypt.compare(data.password, user.password!);
     return isValid ? user : null;
   }
 }
