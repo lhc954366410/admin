@@ -1,17 +1,16 @@
+import { config } from '@/config/env';
+import { CreateUserDto, UserResponseDto } from '@/dto/user.dto';
 import { BaseRepository } from '@/repositories/base.repository';
-import { IUser, CreateUserDto } from '@/models/user.model';
 import * as bcrypt from 'bcrypt';
 
-const SALT_ROUNDS = 10;
-
-export class UserRepository extends BaseRepository<IUser> {
+export class UserRepository extends BaseRepository<UserResponseDto> {
   constructor() {
     super('users');
   }
 
-  async findByEmail(email: string): Promise<IUser | null> {
+  async findByEmail(email: string): Promise<UserResponseDto | null> {
 
-    const [rows] = await this.query(
+    const rows = await this.query(
       `SELECT * FROM ${this.tableName} WHERE email = ?`,
       [email]
     );
@@ -19,19 +18,17 @@ export class UserRepository extends BaseRepository<IUser> {
     return rows[0] || null;
   }
 
-  async create(userData: CreateUserDto): Promise<IUser> {
-    const hashedPassword = await bcrypt.hash(userData.password, SALT_ROUNDS);
-    
-    const [result] = await this.query(
+  async create(userData: CreateUserDto): Promise<UserResponseDto> {
+    const hashedPassword = await bcrypt.hash(userData.password, config.app.saltRounds);
+    const result = await this.query(
       `INSERT INTO ${this.tableName} SET ?`, 
       [{
-        username: userData.username,
+        userName: userData.userName,
         email: userData.email,
-        password_hash: hashedPassword
+        password: hashedPassword
       }]
     );
-    
-    return this.findById(result.insertId) as Promise<IUser>;
+    return this.findById(result.insertId) as Promise<UserResponseDto>;
   }
 }
 

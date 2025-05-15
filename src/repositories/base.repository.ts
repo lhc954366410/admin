@@ -1,3 +1,4 @@
+import { convertKeysToCamelCase, convertKeysToSnakeCase } from '@/utils/namingConverter';
 import dbPool from '../config/database';
 
 export abstract class BaseRepository<T> {
@@ -8,13 +9,13 @@ export abstract class BaseRepository<T> {
   }
 
   protected async query(sql: string, values?: any[]): Promise<any> {
-
-    const [rows] = await dbPool.query(sql, values);
-    return rows;
+    values = convertKeysToSnakeCase(values);
+    const [rows,fieldPacket] = await dbPool.query(sql, values);
+    return convertKeysToCamelCase(rows)
   }
 
   async findById(id: number): Promise<T | null> {
-    const [rows] = await this.query(
+    const rows = await this.query(
       `SELECT * FROM ${this.tableName} WHERE id = ?`,
       [id]
     );

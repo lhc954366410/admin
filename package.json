@@ -17,7 +17,8 @@
     "koa": "^2.16.1",
     "koa-bodyparser": "^4.4.1",
     "koa2-cors": "^2.0.6",
-    "mysql2": "^3.14.0"
+    "mysql2": "^3.14.0",
+    "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

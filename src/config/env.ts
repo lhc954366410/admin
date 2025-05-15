@@ -10,6 +10,7 @@ interface Config {
   };
   app: {
     port: number;
+    saltRounds: number;
   };
 }
 
@@ -24,6 +25,7 @@ export const config: Config = {
     connectionLimit: 10
   },
   app: {
-    port: 3000
+    port: 3000,
+    saltRounds: 10
   }
 };

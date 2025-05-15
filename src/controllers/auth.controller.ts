@@ -1,54 +1,52 @@
 import { Context } from 'koa';
 import userService from '@/services/user.service';
-import { CreateUserDto, UserResponse } from '@/models/user.model';
-// import { validate } from '@/validators/auth.validator';
+// import { CreateUserDto, UserResponse } from '@/models/user.model';
+import { plainToInstance } from 'class-transformer';
+import { validate } from 'class-validator';
+import { CreateUserDto, LoginUserDto } from '@/dto/user.dto';
+import { validateDto } from '@/utils/validateDto';
 
 class AuthController {
   async register(ctx: Context) {
-    // 验证输入
-    // const { error, value } = validate(ctx.request.body);
-    // if (error) {
-    //   ctx.status = 400;
-    //   ctx.body = { error: error.message };
-    //   return;
-    // }
-
-    try {
-      const userData = ctx.request.body as CreateUserDto;
-      const user = await userService.register(userData);
-
-      // 移除敏感信息
-      const { password_hash, ...response } = user;
-
-      ctx.status = 201;
-      ctx.body = { user: response };
-    } catch (err: any) {
-      ctx.status = 400;
-      ctx.body = { error: err.message };
+    const userData = ctx.request.body as CreateUserDto;
+    // const teamDto = plainToInstance(CreateUserDto, userData);
+    // const errors = await validate(teamDto);
+    const errors = await validateDto(CreateUserDto, userData);
+    if (errors) {
+      ctx.body = errors;
+      return
     }
+    const user = await userService.register(userData);
+    ctx.body = {
+      code: 200,
+      data: user,
+
+    };
   }
 
   async login(ctx: Context) {
-    const { email, password } = <any>ctx.request.body;
-
-    // try {
-    const user = await userService.validateCredentials(email, password);
-
-    if (!user) {
-      ctx.status = 401;
-      ctx.body = { error: 'Invalid credentials' };
-      return;
+    const userData = <LoginUserDto>ctx.request.body
+    const errors = await validateDto(LoginUserDto, userData);
+    if (errors) {
+      ctx.body = errors;
+      return
     }
 
-    // 生成token等逻辑...
-    const { password_hash, ...response } = user;
 
-    ctx.body = { user: response };
-    // } catch (err) {
-    //   console.error(err);
-    //   ctx.status = 500;
-    //   ctx.body = { error: 'Login failed' };
-    // }
+
+    const user = await userService.validateCredentials(userData);
+    if (!user) {
+      ctx.body = {
+        message: '用户名或密码不正确',
+        code: '5000',
+      };
+      return;
+    }
+    ctx.body = {
+      code: 200,
+      data: {},
+    };
+
   }
 }
 
