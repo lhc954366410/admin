@@ -1,7 +1,5 @@
-import { config } from '@/config/env';
 import { CreateUserDto, UserResponseDto } from '@/dto/user.dto';
 import { BaseRepository } from '@/repositories/base.repository';
-import * as bcrypt from 'bcrypt';
 
 export class UserRepository extends BaseRepository<UserResponseDto> {
   constructor() {

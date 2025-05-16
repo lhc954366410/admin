@@ -19,8 +19,10 @@
     "koa-bodyparser": "^4.4.1",
     "koa-jwt": "^4.0.4",
     "koa2-cors": "^2.0.6",
+    "koa2-swagger-ui": "^5.11.0",
     "mysql2": "^3.14.0",
-    "reflect-metadata": "^0.2.2"
+    "reflect-metadata": "^0.2.2",
+    "swagger-jsdoc": "^6.2.8"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
@@ -30,6 +32,7 @@
     "@types/koa2-cors": "^2.0.5",
     "@types/koa__router": "^12.0.4",
     "@types/node": "^22.14.1",
+    "@types/swagger-jsdoc": "^6.0.4",
     "nodemon": "^3.1.9",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",

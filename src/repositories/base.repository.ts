@@ -21,4 +21,11 @@ export abstract class BaseRepository<T> {
     );
     return rows[0] || null;
   }
+  async deleteById(id: number): Promise<T | null> {
+    const rows = await this.query(
+      `DELETE FROM ${this.tableName} WHERE id = ?`,
+      [id]
+    );
+    return rows[0] || null;
+  }
 }

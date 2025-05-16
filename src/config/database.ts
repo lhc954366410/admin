@@ -5,7 +5,20 @@ export class Database {
   private static pool: mysql.Pool;
 
   static async initialize() {
-    this.pool = mysql.createPool(config.db);
+    this.pool = mysql.createPool({
+      ...config.db,
+      typeCast:(field, next) =>{
+        //处理日期格式
+        if (field.type === 'DATETIME' || field.type === 'TIMESTAMP') {
+          return field?.string() ? field.string() : null;
+        }
+        if (field.type === 'DATE') {
+          return field?.string()  ? field?.string() : null ;
+        }
+        return next();
+      }
+    
+    });
     try {
       // 测试连接
       const connection = await this.pool.getConnection();

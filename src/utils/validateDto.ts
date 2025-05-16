@@ -13,14 +13,13 @@ export async function validateDto<T extends object>(
     skipMissingProperties = false
 ): Promise<any> {
     const dtoInstance = plainToInstance(dtoClass, data);
-    let errors =  await validate(dtoInstance, {
+    let errors = await validate(dtoInstance, {
         skipMissingProperties,
         whitelist: false,
         forbidNonWhitelisted: false
     });
     if (errors.length > 0) {
-        console.log(errors);
-        const err = errors.map((item) => {            
+        const err = errors.map((item) => {
             return `${item.property}: ${Object.values(item.constraints!).join(';')}`;
         }).join('<br/>');
         return {

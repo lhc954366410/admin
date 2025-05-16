@@ -5,6 +5,7 @@ import router from '@/routes/index';
 import { config } from './config/env';
 import { Database } from './config/database';
 import errorMiddleware from './middleware/error';
+import { setupSwagger } from './middleware/swagger';
 (async () => {
 
     const app = new Koa();
@@ -15,6 +16,9 @@ import errorMiddleware from './middleware/error';
     app.use(errorMiddleware);
     // 解析请求体
     app.use(bodyParser())
+    // Swagger 文档
+    const { swaggerUIMiddleware } = setupSwagger(router);
+    app.use(swaggerUIMiddleware);
     
     // 响应
     app.use(router.routes()).use(router.allowedMethods());

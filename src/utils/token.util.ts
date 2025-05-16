@@ -1,7 +1,7 @@
 import { config } from '@/config/env';
 import jwt from 'jsonwebtoken';
 
-export class TokenService {
+export class TokenUtil {
   /**
    * 生成访问令牌
    * @param userId 用户ID
@@ -36,7 +36,7 @@ export class TokenService {
       },
       config.jwt.secret,
       {
-        expiresIn: '7d', // 刷新令牌通常有更长的有效期
+        expiresIn: '7 d', // 刷新令牌通常有更长的有效期
       }
     );
   }
