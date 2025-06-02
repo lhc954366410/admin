@@ -1,8 +1,7 @@
 import mysql from 'mysql2/promise';
 import { config } from './env';
-
-export class Database {
-  private static pool: mysql.Pool;
+class Database {
+  static pool: mysql.Pool;
 
   static async initialize() {
     this.pool = mysql.createPool({
@@ -42,5 +41,5 @@ export class Database {
     }
   }
 }
-Database.initialize()
-export default Database.getPool();
+// Database.initialize()
+export default Database;

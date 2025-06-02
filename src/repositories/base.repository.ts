@@ -1,5 +1,5 @@
 import { convertKeysToCamelCase, convertKeysToSnakeCase } from '@/utils/namingConverter';
-import dbPool from '../config/database';
+import Database from '../config/database';
 
 export abstract class BaseRepository<T> {
   protected tableName: string;
@@ -10,7 +10,7 @@ export abstract class BaseRepository<T> {
 
   protected async query(sql: string, values?: any[]): Promise<any> {
     values = convertKeysToSnakeCase(values);
-    const [rows,fieldPacket] = await dbPool.query(sql, values);
+    const [rows,fieldPacket] = await Database.pool.query(sql, values);
     return convertKeysToCamelCase(rows)
   }
 

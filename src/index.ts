@@ -3,11 +3,12 @@ import cors from 'koa2-cors';
 import bodyParser from 'koa-bodyparser'
 import router from '@/routes/index';
 import { config } from './config/env';
-import { Database } from './config/database';
+import Database  from './config/database';
 import errorMiddleware from './middleware/error';
 import { setupSwagger } from './middleware/swagger';
 (async () => {
-
+    //连接数据库
+    await Database.initialize()
     const app = new Koa();
     // 跨域
     app.use(cors({
