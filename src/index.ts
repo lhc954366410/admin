@@ -6,9 +6,21 @@ import { config } from './config/env';
 import Database  from './config/database';
 import errorMiddleware from './middleware/error';
 import { setupSwagger } from './middleware/swagger';
+import { createConnection } from 'typeorm';
+import ormconfig from './config/ormconfig';
+
 (async () => {
+    //使用orm连接
+    try{
+        await  createConnection(ormconfig);
+        console.log("orm连接成功")
+    }catch(e){
+        console.log("orm连接失败---",e)
+    }
+
+    // console.log("ormres",ormres)
     //连接数据库
-    await Database.initialize()
+    // await Database.initialize()
     const app = new Koa();
     // 跨域
     app.use(cors({
@@ -28,7 +40,7 @@ import { setupSwagger } from './middleware/swagger';
         console.log(`http://localhost:${PORT}/`);
     });
     process.on('SIGTERM', async () => {
-        await Database.close();
+        // await Database.close();
         server.close(() => {
         console.log('Server closed');
         process.exit(0);
