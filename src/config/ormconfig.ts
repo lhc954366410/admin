@@ -1,6 +1,6 @@
-import { ConnectionOptions, createConnection } from 'typeorm';
-import { config } from './env';
 
+import { ConnectionOptions } from 'typeorm';
+import { config } from './env';
 const ormconfig: ConnectionOptions = {
   type: 'mysql',
   host: config.db.host,
@@ -11,8 +11,7 @@ const ormconfig: ConnectionOptions = {
   synchronize: false,  // 生产环境应为 false
   logging: false,
   entities: [
-    'src/entities/**/*.ts',
-    // __dirname + '/entities/**/*.js'
+   'src/**/*.entity.ts',
   ],
 //   数据库迁移
 //   migrations: [ 

@@ -6,13 +6,12 @@ import { config } from './config/env';
 import Database  from './config/database';
 import errorMiddleware from './middleware/error';
 import { setupSwagger } from './middleware/swagger';
-import { createConnection } from 'typeorm';
-import ormconfig from './config/ormconfig';
+import { AppDataSource } from './config/AppDataSource';
 
 (async () => {
     //使用orm连接
     try{
-        await  createConnection(ormconfig);
+        await  AppDataSource.initialize()
         console.log("orm连接成功")
     }catch(e){
         console.log("orm连接失败---",e)

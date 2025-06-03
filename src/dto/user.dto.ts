@@ -3,7 +3,7 @@ import { IsEmail, IsNotEmpty, IsString, MinLength, MaxLength, IsOptional, IsPhon
 export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
-  @MinLength(3)
+  @MinLength(2)
   @MaxLength(50)
   
   userName!: string;
@@ -35,7 +35,7 @@ export class LoginUserDto {
 export class UpdateUserDto {
   @IsOptional()
   @IsString()
-  @MinLength(3)
+  @MinLength(2)
   @MaxLength(50)
   userName?: string;
 
