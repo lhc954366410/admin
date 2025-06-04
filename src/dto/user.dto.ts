@@ -1,3 +1,4 @@
+import { User } from '@/entities/User.entity';
 import { IsEmail, IsNotEmpty, IsString, MinLength, MaxLength, IsOptional, IsPhoneNumber, IsIn } from 'class-validator';
 
 export class CreateUserDto {
@@ -5,11 +6,11 @@ export class CreateUserDto {
   @IsString()
   @MinLength(2)
   @MaxLength(50)
-  
+
   userName!: string;
 
   @IsNotEmpty()
-  @IsEmail({}, { message: '邮箱格式不正确'})
+  @IsEmail({}, { message: '邮箱格式不正确' })
   email!: string;
 
   @IsNotEmpty()
@@ -25,11 +26,11 @@ export class CreateUserDto {
 
 export class LoginUserDto {
   @IsNotEmpty()
-  @IsEmail({}, { message: '邮箱格式不正确'})
+  @IsEmail({}, { message: '邮箱格式不正确' })
   email!: string;
 
   @IsNotEmpty()
-  password!: string; 
+  password!: string;
 }
 
 export class UpdateUserDto {
@@ -62,28 +63,26 @@ export class UpdateUserDto {
 }
 
 export class UserResponseDto {
-  id!: number;
-  userName!: string;
-  email!: string;
+  id: number;
+  userName: string;
+  email: string;
   phone?: string;
   avatar?: string;
-  status!: number;
+  status: number;
   lastLogin?: Date;
-  createdAt!: Date;
-  updatedAt!: Date;
+  createdAt: Date;
+  updatedAt: Date;
   password?: string;
 
-  static fromEntity(user: UserResponseDto): UserResponseDto {
-    const dto = new UserResponseDto();
-    dto.id = user.id;
-    dto.userName = user.userName;
-    dto.email = user.email;
-    dto.phone = user.phone;
-    dto.avatar = user.avatar;
-    dto.status = user.status;
-    dto.lastLogin = user.lastLogin;
-    dto.createdAt = user.createdAt;
-    dto.updatedAt = user.updatedAt;
-    return dto;
+  constructor(user: User) {
+    this.id = user.id;
+    this.userName = user.userName;
+    this.email = user.email;
+    this.phone = user.phone!;
+    this.avatar = user.avatar!;
+    this.status = user.status;
+    this.lastLogin = user.lastLogin!;
+    this.createdAt = user.createdAt;
+    this.updatedAt = user.updatedAt;
   }
 }

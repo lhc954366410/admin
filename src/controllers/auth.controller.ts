@@ -1,8 +1,5 @@
 import { Context } from 'koa';
 import userService from '@/services/user.service';
-// import { CreateUserDto, UserResponse } from '@/models/user.model';
-import { plainToInstance } from 'class-transformer';
-import { validate } from 'class-validator';
 import { CreateUserDto, LoginUserDto } from '@/dto/user.dto';
 import { validateDto } from '@/utils/validateDto';
 import { TokenUtil } from '@/utils/token.util';
@@ -24,6 +21,7 @@ class AuthController {
       return
     }
     const user = await userService.register(userData);
+    // ctx.setBody(user)
     ctx.body = {
       code: 200,
       data: user,

@@ -7,23 +7,20 @@ export class UserRepository{
   constructor() {
     
   }
-  async findByEmail(email: string): Promise<UserResponseDto | null> {
+  async findByEmail(email: string): Promise<User | null> {
 
     const firstUser = await this.userRep.findOneBy({
       email
-    })  as UserResponseDto
+    })  
     return firstUser || null;
   }
 
-  async create(userData: CreateUserDto): Promise<UserResponseDto> {
+  async create(userData: CreateUserDto): Promise<User> {
     const user = new User();
     user.userName=userData.userName;
     user.email=userData.email;
     user.password= userData.password;
-    const result = await this.userRep.save(user) as UserResponseDto
-    console.log("result",result)
-
-    
+    const result = await this.userRep.save(user)     
     return result ;
   }
 }

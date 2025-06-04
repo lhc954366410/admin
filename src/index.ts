@@ -1,4 +1,4 @@
-import Koa from 'koa';
+import Koa, { Context, Next } from 'koa';
 import cors from 'koa2-cors';
 import bodyParser from 'koa-bodyparser'
 import router from '@/routes/index';
@@ -21,10 +21,21 @@ import { AppDataSource } from './config/AppDataSource';
     //连接数据库
     // await Database.initialize()
     const app = new Koa();
+
     // 跨域
     app.use(cors({
         origin: '*'
     }))
+    app.use(async (ctx:Context,next: Next)=>{
+        ctx.setBody = (data:any,code=200,message:"")=>{
+            ctx.body={
+                data,
+                code,
+                message
+            }
+        }
+        await next()
+    })
     app.use(errorMiddleware);
     // 解析请求体
     app.use(bodyParser())

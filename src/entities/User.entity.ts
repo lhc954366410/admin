@@ -72,22 +72,24 @@ export class User {
   })
   lastLogin!: Date | null;
 
-  @Column({
+  @CreateDateColumn({
     name: 'created_at',
     type: 'datetime',
     default: () => 'CURRENT_TIMESTAMP',
     nullable: false,
     comment: '创建时间',
+    precision:0,
   })
   createdAt!: Date;
 
-  @Column({
+  @UpdateDateColumn({
     name: 'updated_at',
     type: 'datetime',
     default: () => 'CURRENT_TIMESTAMP',
     onUpdate: 'CURRENT_TIMESTAMP',
     nullable: false,
-    comment: '更新时间'
+    comment: '更新时间',
+    precision:0
   })
   updatedAt!: Date;
 }
