@@ -1,6 +1,7 @@
 import { Context } from 'koa';
-import { CreateUserDto, LoginUserDto } from '@/dto/user.dto';
 import { validateDto } from '@/utils/validateDto';
+import { CreateCategoryDto } from '@/dto/categories.dto';
+import categoriesService from '@/services/categories.service';
 
 class CategoriesController {
   async selectList(ctx: Context) {
@@ -10,7 +11,7 @@ class CategoriesController {
     };
   }
   async selectOne(ctx: Context) {
-    const userData = ctx.request.body as CreateUserDto;
+    const userData = ctx.request.body as CreateCategoryDto;
     
     ctx.body = {
       code: 200,
@@ -21,18 +22,24 @@ class CategoriesController {
   }
 
   async add(ctx: Context) {
-    const userData = <LoginUserDto>ctx.request.body
+    const addData = ctx.request.body as CreateCategoryDto;
+    const errors = await validateDto(CreateCategoryDto, addData);
+    if (errors) {
+      ctx.body = errors;
+      return
+    }
+    const resData = await categoriesService.add(addData);   
     
     ctx.body = {
       code: 200,
       message:"添加成功",
-      data: {},
+      data:resData,
     };
 
   }
 
   async update(ctx: Context) {
-    const userData = <LoginUserDto>ctx.request.body
+    const userData = <any>ctx.request.body
     
     ctx.body = {
       code: 200,
@@ -42,7 +49,7 @@ class CategoriesController {
 
   }
   async delete(ctx: Context) {
-    const userData = <LoginUserDto>ctx.request.body
+    const userData = <any>ctx.request.body
     
     ctx.body = {
       code: 200,

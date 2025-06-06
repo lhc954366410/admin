@@ -38,7 +38,7 @@ export const config: Config = {
   },
   jwt:{
     secret:'test',
-    expiresIn:'1 H',
+    expiresIn:'1 d',
     issuer:'admin',
     audience:'admin'
   }

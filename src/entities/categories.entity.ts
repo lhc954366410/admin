@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
 
 @Entity({ name: 'categories' })
-export class Category {
+export class Categories {
     @PrimaryGeneratedColumn({ name: 'id', type: 'int', comment: '主键ID' })
     id!: number;
 

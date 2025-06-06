@@ -1,4 +1,4 @@
-import { Category } from '@/entities/category.entity';
+import { Categories } from '@/entities/categories.entity';
 import {
   IsString,
   IsNotEmpty,
@@ -8,16 +8,18 @@ import {
 } from 'class-validator';
 
 export class CreateCategoryDto {
+  /**名称 */
   @IsString()
   @IsNotEmpty()
   @Length(1, 50)
   name!: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @Length(1, 50)
+  /**别名 */
+  // @IsString()
+  @IsNotEmpty({
+    message: '别名不可为空'
+  })
   @Matches(/^[a-z0-9-]+$/, {
-    message: 'slug只能包含小写字母、数字和连字符(-)'
+    message: '别名只能包含小写字母、数字和连字符(-)'
   })
   slug!: string;
 
@@ -52,7 +54,7 @@ export class CategoryResponseDto {
   createdAt: Date;
   updatedAt: Date;
 
-  constructor(category: Category) {
+  constructor(category: Categories) {
     this.id = category.id;
     this.name = category.name;
     this.slug = category.slug;
