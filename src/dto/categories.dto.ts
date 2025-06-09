@@ -4,17 +4,17 @@ import {
   IsNotEmpty,
   IsOptional,
   Length,
-  Matches
+  Matches,
+  IsNumber
 } from 'class-validator';
+import { BaseRequestListDto } from './baseRequestList.dto';
 
 export class CreateCategoryDto {
   /**名称 */
-  @IsString()
-  @IsNotEmpty()
-  @Length(1, 50)
+  @IsNotEmpty({message:"名称不能为空"})
   name!: string;
+
   /**别名 */
-  // @IsString()
   @IsNotEmpty({
     message: '别名不可为空'
   })
@@ -23,34 +23,36 @@ export class CreateCategoryDto {
   })
   slug!: string;
 
-  @IsString()
-  @IsOptional()
+  /**描述 */
   @Length(0, 255)
-  description?: string;
+  comment?: string;
 }
 
 export class UpdateCategoryDto {
-  @IsString()
-  @IsOptional()
-  @Length(1, 50)
-  name?: string;
+    @IsNotEmpty({message:"id不能为空"})
+    id!:number;
 
-  @IsString()
-  @IsOptional()
-  @Length(1, 50)
-
-  slug?: string;
-
-  @IsString()
-  @IsOptional()
-  @Length(0, 255)
-  description?: string;
+    /**名称 */
+    @IsNotEmpty({message:"名称不能为空"})
+    name!: string;
+  
+    /**别名 */
+    @IsNotEmpty({
+      message: '别名不可为空'
+    })
+    @Matches(/^[a-z0-9-]+$/, {
+      message: '别名只能包含小写字母、数字和连字符(-)'
+    })
+    slug!: string;
+  
+    /**描述 */
+    comment?: string;
 }
 export class CategoryResponseDto {
   id: number;
   name: string;
   slug: string;
-  description: string | null;
+  comment: string | null;
   createdAt: Date;
   updatedAt: Date;
 
@@ -58,9 +60,19 @@ export class CategoryResponseDto {
     this.id = category.id;
     this.name = category.name;
     this.slug = category.slug;
-    this.description = category.description;
+    this.comment = category.comment;
     this.createdAt = category.createdAt;
     this.updatedAt = category.updatedAt;
   }
 }
 
+export class CategoryListRequestDto extends BaseRequestListDto{
+  name?:string
+  slug?:string
+
+}
+
+export class DeleteCategoryRequestDto {
+  @IsNotEmpty({message:"id是必须的！"})
+  id!:number
+}

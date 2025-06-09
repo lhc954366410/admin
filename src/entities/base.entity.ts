@@ -41,5 +41,5 @@ export class BaseEntity {
         nullable: true,
         comment: '备注'
     })
-    description!: string | null;
+    comment!: string | null;
 }

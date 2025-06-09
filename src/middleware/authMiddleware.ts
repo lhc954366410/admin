@@ -4,9 +4,7 @@ import { Context, Next } from 'koa';
 
 export async function authMiddleware(ctx: Context, next: Next) {
   // 从请求头获取 token
-  const token = ctx.headers.authorizationtoken as string;
-  console.log('token',typeof token)
-  
+  const token = ctx.headers.authorizationtoken as string;  
   if (token==="undefined") {
     ctx.body = { 
         code: 405,
