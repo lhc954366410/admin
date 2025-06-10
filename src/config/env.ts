@@ -34,7 +34,7 @@ export const config: Config = {
   },
   app: {
     port: 3000,
-    saltRounds: 10
+    saltRounds: 10,
   },
   jwt:{
     secret:'test',

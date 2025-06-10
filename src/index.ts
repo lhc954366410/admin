@@ -7,6 +7,8 @@ import Database from './config/database';
 import errorMiddleware from './middleware/error';
 import { setupSwagger } from './middleware/swagger';
 import { AppDataSource } from './config/AppDataSource';
+import serve from 'koa-static';
+import path from 'path';
 
 (async () => {
 
@@ -24,6 +26,7 @@ import { AppDataSource } from './config/AppDataSource';
         console.log("orm连接失败---", e)
     }
 
+
     // console.log("ormres",ormres)
     //连接数据库
     // await Database.initialize()
@@ -33,16 +36,18 @@ import { AppDataSource } from './config/AppDataSource';
     app.use(cors({
         origin: '*'
     }))
-    app.use(async (ctx: Context, next: Next) => {
-        ctx.setBody = (data: any, code = 200, message: "") => {
-            ctx.body = {
-                data,
-                code,
-                message
-            }
-        }
-        await next()
-    })
+    // 静态文件服务
+    app.use(serve(path.join(__dirname, '../../public')));
+    // app.use(async (ctx: Context, next: Next) => {
+    //     ctx.setBody = (data: any, code = 200, message: "") => {
+    //         ctx.body = {
+    //             data,
+    //             code,
+    //             message
+    //         }
+    //     }
+    //     await next()
+    // })
     app.use(errorMiddleware);
     // 解析请求体
     app.use(bodyParser())
